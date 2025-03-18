@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correción ABV 20°C</title>
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            max-width: 300px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+        }
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        button {
+            padding: 10px;
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #resultado {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Correción del grado alcohólico por temperatura (referencia 20°C)</h2>
+    <div class="container">
+        <input type="number" id="temper" placeholder="Lectura temperatura (°C)">
+        <input type="number" id="grade" placeholder="Grado alcohólico x vol.">
+        <button py-click="calcular">Calcular</button>
+        <p id="resultado"></p>
+    </div>
+
+    <py-script>
+        def calcular():
+            temperatura = float(Element("temper").element.value)
+            grado_alcohol = float(Element("grade").element.value)
+            resultado = grado_alcohol * (1 + 0.015 * (20 - temperatura))
+            Element("resultado").element.innerText = f"Resultado: {resultado}"
+    </py-script>
+
+</body>
+</html>
