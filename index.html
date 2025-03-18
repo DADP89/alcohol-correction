@@ -4,32 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Correción ABV</title>
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <!-- Cargar Brython -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.10.5/brython.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input, button {
+            display: block;
+            margin: 10px auto;
+            padding: 8px;
+            font-size: 16px;
+        }
+        p {
+            font-size: 18px;
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
 </head>
-<body>
-    <h2>Correción del grado alcohólico por temperatura (referencia 20°C)</h2>
+<body onload="brython()">
+
+    <h2>Corrección del grado alcohólico por temperatura (referencia 20°C)</h2>
 
     <label for="temp">Lectura temperatura (°C):</label>
     <input type="number" id="temp">
-    
+
     <label for="grad">Grado alcohólico x Vol.:</label>
     <input type="number" id="grad">
-    
-    <button py-click="calcular">Calcular</button>
-    
+
+    <button id="calcular_btn">Calcular</button>
+
     <h3>Resultado:</h3>
     <p id="resultado"></p>
 
-    <py-script>
+    <!-- Código Python con Brython -->
+    <script type="text/python">
+from browser import document
+
+# Función para realizar la suma
 def calcular(event):
-    tempe = float(Element("temp").element.value)
-    grade = float(Element("grad").element.value)
-    if tempe and grade:  # Verifica que ambos campos tengan valores
-        resultado = grade * (1 + 0.015 * (20 - tempe))
-        Element("resultado").element.innerText = f"Resultado: {resultado}"
-    else:
-        Element("resultado").element.innerText = "Full text-boxes"
-    </py-script>
+    # Obtener los valores de los inputs
+    tempe = float(document["temp"].value)
+    grade = float(document["grad"].value)
+    
+    # Realizar el cálculo
+    resultado = grade * (1 + 0.015 * (20 - tempe))
+    
+    # Mostrar el resultado en el HTML
+    document["resultado"].text = f"Resultado: {resultado}"
+
+# Asociar la función al evento click del botón
+document["calcular_btn"].bind("click", calcular)
+    </script>
 
 </body>
 </html>
