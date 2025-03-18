@@ -5,53 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Correción ABV</title>
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-        }
-        input, button {
-	    display: block;
-            padding: 8px;
-            margin: 10px auto;
-	    font-size: 16px;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        #resultado {
-            color: blue;
-            font-size: 18px;
-            font-weight: bold;
-        }
-    </style>
 </head>
 <body>
-
     <h2>Correción del grado alcohólico por temperatura (referencia 20°C)</h2>
-    <div class="container">
-        <input type="number" id="temp" placeholder="Lectura temperatura (°C)">
-        <input type="number" id="grad" placeholder="Grado alcohólico x vol.">
-        <button id="btnCalcular">Calcular</button>
-        <p id="resultado"></p>
-    </div>
 
-    <py-script display="none">
-        from pyscript import document
+    <label for="temp">Lectura temperatura (°C):</label>
+    <input type="number" id="temp">
+    
+    <label for="grad">Grado alcohólico x Vol.:</label>
+    <input type="number" id="grad">
+    
+    <button py-click="calcular">Calcular</button>
+    
+    <h3>Resultado:</h3>
+    <p id="resultado"></p>
 
-        def calcular(event):
-            tempe = document.querySelector("#temp").value
-            grade = document.querySelector("#grad").value
-
-            if tempe and grade:  # Verifica que ambos campos tengan valores
-                resultado = float(grade) * (1 + 0.015 * (20 - float(tempe)))
-                document.querySelector("#resultado").innerText = f"Resultado: {resultado}"
-            else:
-                document.querySelector("#resultado").innerText = "Por favor, ingrese ambos campos."
-
-        document.querySelector("#btnCalcular").bind("click", sumar)
+    <py-script>
+def calcular(event):
+    tempe = float(Element("temp").element.value)
+    grade = float(Element("grad").element.value)
+    if tempe and grade:  # Verifica que ambos campos tengan valores
+        resultado = grade * (1 + 0.015 * (20 - tempe))
+        Element("resultado").element.innerText = f"Resultado: {resultado}"
+    else:
+        Element("resultado").element.innerText = "Full text-boxes"
     </py-script>
 
 </body>
