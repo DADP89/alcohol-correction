@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correción ABV</title>
+    <!-- Cargar Brython -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.10.5/brython.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input, button {
+            display: block;
+            margin: 10px auto;
+            padding: 8px;
+            font-size: 16px;
+        }
+        #resultado {
+            font-size: 18px;
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+</head>
+<body onload="brython()">
+
+    <h2>Corrección del grado alcohólico por temperatura (referencia 20°C)</h2>
+
+    <label for="temp">Lectura temperatura (°C):</label>
+    <input type="number" id="temp">
+
+    <label for="grad">Grado alcohólico x Vol.:</label>
+    <input type="number" id="grad">
+
+    <button id="calcular_btn">Calcular</button>
+
+    <h3>Resultado:</h3>
+    <p id="resultado"></p>
+
+    <hr>
+
+    <p>Para obtener una medición precisa del grado alcohólico de un destilado, es necesario corregir la lectura del alcoholímetro en función de la temperatura de la muestra.</p>
+    
+    <h2>Fórmula de Corrección</h2>
+    <p>La fórmula utilizada para corregir el grado alcohólico en función de la temperatura es:</p>
+    
+    <p><code>Grado corregido = Grado leído × [1 + 0,015 × (20 - T)]</code></p>
+    
+    <p>Donde:</p>
+    <ul>
+        <li><strong>Grado leído</strong>: Valor obtenido directamente del alcoholímetro.</li>
+        <li><strong>T</strong>: Temperatura de la muestra en grados Celsius.</li>
+        <li><strong>0,015</strong>: Coeficiente de corrección estándar para soluciones hidroalcohólicas.</li>
+    </ul>
+    
+    <h2>Consideraciones</h2>
+    <p>Esta fórmula es una aproximación utilizada comúnmente en la industria. Para mayor precisión, se recomienda realizar mediciones a 20 °C o emplear métodos analíticos como la destilación seguida de medición de densidad.</p>
+
+    <hr>
+
+    <h2>Referencia</h2>
+    <p>La fórmula utilizada se basa en referencias aceptadas en la industria de destilados y enología:</p>
+    <p>
+        📌 <strong>OIV (Organización Internacional de la Viña y el Vino)</strong>. <em>Determinación del contenido de alcohol en bebidas alcohólicas mediante medición de la densidad</em>. OIV-OENO 601B-2021. Disponible en: 
+        <a href="https://www.oiv.int/public/medias/8153/es-oiv-oeno-601b-2021.pdf" target="_blank">www.oiv.int</a>
+    </p>
+
+    <!-- Código Python con Brython -->
+    <script type="text/python">
+from browser import document
+
+# Función para realizar la suma
+def calcular(event):
+    # Obtener los valores de los inputs
+    tempe = float(document["temp"].value)
+    grade = float(document["grad"].value)
+    
+    # Realizar el cálculo
+    resultado = grade * (1 + 0.015 * (20 - tempe))
+    
+    # Mostrar el resultado en el HTML
+    document["resultado"].text = f"{resultado:.3f}"
+
+# Asociar la función al evento click del botón
+document["calcular_btn"].bind("click", calcular)
+    </script>
+
+</body>
+</html>
