@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corrección ABV</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input, button {
+            display: block;
+            margin: 10px auto;
+            padding: 8px;
+            font-size: 16px;
+        }
+        #resultado {
+            font-size: 18px;
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h2>Corrección ABV por temperatura (referencia 20°C)</h2>
+
+    <label for="index">Temperatura (°C):</label>
+    <input type="text" id="index">
+
+    <label for="columna">ABV (%):</label>
+    <input type="text" id="columna">
+
+    <button id="calcular_btn">Consultar</button>
+
+    <h3>Resultado:</h3>
+    <p id="resultado"></p>
+
+    <script>
+        let csvData = [];
+        
+        // Cargar CSV desde GitHub Pages
+        fetch('https://github.com/DADP89/alcohol-correction/blob/main/ABV_20C_TABLE.csv')
+            .then(response => response.text())
+            .then(text => {
+                csvData = parseCSV(text);
+                document.getElementById("calcular_btn").disabled = false;
+            });
+
+        function parseCSV(text) {
+            const rows = text.split('\n');
+            return rows.map(row => row.split(','));
+        }
+
+        document.getElementById("calcular_btn").addEventListener("click", () => {
+            const index = document.getElementById("index").value;
+            const columna = document.getElementById("columna").value;
+            
+            const header = csvData[0];
+            const colIndex = header.indexOf(columna);
+            
+            if (colIndex === -1) {
+                document.getElementById("resultado").textContent = "Columna no existe";
+                return;
+            }
+
+            const row = csvData.find(r => r[0] === index);
+            document.getElementById("resultado").textContent = row ? row[colIndex] : "Índice no encontrado";
+        });
+    </script>
+</body>
+</html>
