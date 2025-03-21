@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- ... (estilos y Brython igual) ... -->
+</head>
+<body onload="brython()">
+    <h2>Corrección del grado alcohólico x vol. por temperatura (referencia 20°C)</h2>
+
+    <label for="index">Lectura temperatura (20°C):</label>
+    <input type="text" id="index">
+
+    <label for="columna">Grado alcohólico x Vol.:</label>
+    <input type="text" id="columna">
+
+    <button id="calcular_btn">Consultar</button>
+
+    <h3>Resultado:</h3>
+    <p id="resultado"></p>
+
+    <script type="text/python">
+from browser import document, ajax
+
+data = {}  # Almacena filas: {índice: [valores]}
+headers = []  # Nombres de columnas
+
+def cargar_csv(req):
+    global data, headers
+    if req.status == 200:
+        lineas = req.text.split('\n')
+        headers = [campo.strip() for campo in lineas[0].split(',')]
+        for linea in lineas[1:]:
+            campos = [campo.strip() for campo in linea.split(',')]
+            if len(campos) == len(headers):
+                indice = campos[0]
+                data[indice] = campos[1:]
+        document["calcular_btn"].disabled = False
+    else:
+        document["resultado"].text = "Error cargando CSV"
+
+# Cargar CSV al iniciar
+ajax.get("ABV_20C_TABLE.csv", oncomplete=cargar_csv)
+
+def buscar_valor(event):
+    indice = document["index"].value
+    columna = document["columna"].value
+
+    if not data:
+        document["resultado"].text = "CSV no cargado"
+        return
+
+    if indice not in data:
+        document["resultado"].text = "Índice no encontrado"
+        return
+
+    if columna not in headers:
+        document["resultado"].text = "Columna no existe"
+        return
+
+    idx_columna = headers.index(columna)
+    if idx_columna == 0:
+        document["resultado"].text = indice
+    else:
+        try:
+            valor = data[indice][idx_columna -1]
+            document["resultado"].text = valor
+        except IndexError:
+            document["resultado"].text = "Error en datos"
+
+document["calcular_btn"].bind("click", buscar_valor)
+    </script>
+</body>
+</html>
